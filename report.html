@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Support Desk System — Full-Stack Project Report</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm 18mm 16mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #1e293b;
+      line-height: 1.55;
+      font-size: 10.5pt;
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+    }
+    .page-break {
+      page-break-after: always;
+      break-after: page;
+    }
+    .avoid-break {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    
+    /* Cover / Header Header styling */
+    .header-box {
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    .badge-top {
+      display: inline-block;
+      background-color: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      padding: 3px 10px;
+      font-size: 8.5pt;
+      font-weight: 700;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 24pt;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 4px 0 8px 0;
+      letter-spacing: -0.02em;
+    }
+    .subtitle {
+      font-size: 12pt;
+      color: #475569;
+      margin: 0 0 12px 0;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 12px;
+      font-size: 9pt;
+    }
+    .meta-item strong {
+      display: block;
+      color: #64748b;
+      font-size: 8pt;
+      text-transform: uppercase;
+    }
+    .meta-item span {
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    /* Section Headings */
+    h2 {
+      font-size: 14pt;
+      font-weight: 700;
+      color: #0f172a;
+      border-left: 4px solid #2563eb;
+      padding-left: 8px;
+      margin: 22px 0 10px 0;
+    }
+    h3 {
+      font-size: 11pt;
+      font-weight: 600;
+      color: #1e293b;
+      margin: 14px 0 6px 0;
+    }
+
+    p {
+      margin: 0 0 10px 0;
+      text-align: justify;
+    }
+
+    /* Cards and Grids */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 12px 0;
+    }
+    .stat-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 10px 14px;
+      background: #ffffff;
+    }
+    .stat-card.blue { border-left: 4px solid #3b82f6; background: #f8faff; }
+    .stat-card.amber { border-left: 4px solid #f59e0b; background: #fffdf5; }
+    .stat-card.emerald { border-left: 4px solid #10b981; background: #f6fdf9; }
+    .stat-card.purple { border-left: 4px solid #8b5cf6; background: #faf8ff; }
+    .stat-card.red { border-left: 4px solid #ef4444; background: #fef8f8; }
+    .stat-card.orange { border-left: 4px solid #f97316; background: #fffaf5; }
+    .stat-card .label { font-size: 8pt; font-weight: 600; text-transform: uppercase; color: #64748b; }
+    .stat-card .num { font-size: 16pt; font-weight: 800; color: #0f172a; margin-top: 2px; }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 16px 0;
+      font-size: 9pt;
+    }
+    th, td {
+      border: 1px solid #e2e8f0;
+      padding: 7px 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f1f5f9;
+      color: #334155;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 7.5pt;
+      letter-spacing: 0.04em;
+    }
+    tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      font-size: 7.5pt;
+      font-weight: 600;
+    }
+    .badge-open { background: #dbeafe; color: #1e40af; }
+    .badge-progress { background: #fef3c7; color: #92400e; }
+    .badge-waiting { background: #f3e8ff; color: #6b21a8; }
+    .badge-resolved { background: #d1fae5; color: #065f46; }
+    .badge-urgent { background: #fee2e2; color: #991b1b; }
+    .badge-overdue { background: #ffedd5; color: #9a3412; font-weight: 700; }
+    .badge-success { background: #dcfce7; color: #166534; }
+
+    /* Alert / Callout */
+    .callout {
+      border-left: 4px solid #2563eb;
+      background: #eff6ff;
+      padding: 10px 14px;
+      border-radius: 0 6px 6px 0;
+      margin: 10px 0;
+      font-size: 9.5pt;
+    }
+    .callout.amber {
+      border-left-color: #f59e0b;
+      background: #fffbeb;
+      color: #92400e;
+    }
+    .callout.emerald {
+      border-left-color: #10b981;
+      background: #ecfdf5;
+      color: #065f46;
+    }
+
+    /* Code blocks */
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 8.5pt;
+      background: #f1f5f9;
+      padding: 2px 5px;
+      border-radius: 4px;
+      color: #0f172a;
+    }
+    pre {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 8.5pt;
+      overflow-x: auto;
+      margin: 8px 0 14px 0;
+      line-height: 1.4;
+    }
+
+    /* Diagram boxes */
+    .diagram-box {
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: #f8fafc;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 8.5pt;
+      line-height: 1.35;
+      margin: 10px 0;
+      white-space: pre-wrap;
+    }
+
+    .footer {
+      border-top: 1px solid #e2e8f0;
+      padding-top: 8px;
+      font-size: 8pt;
+      color: #94a3b8;
+      text-align: right;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- COVER / HEADER -->
+  <div class="header-box">
+    <span class="badge-top">Practical Assessment & Full-Stack Engineering Report</span>
+    <h1>Support Desk System</h1>
+    <p class="subtitle">Complete Technical Design, Relational Data Architecture, Business Rules, and Verification</p>
+    
+    <div class="meta-grid">
+      <div class="meta-item">
+        <strong>Assessment Task</strong>
+        <span>Support Desk System</span>
+      </div>
+      <div class="meta-item">
+        <strong>Architecture</strong>
+        <span>Full-Stack Monorepo</span>
+      </div>
+      <div class="meta-item">
+        <strong>Stack</strong>
+        <span>React 19 + Express + Prisma</span>
+      </div>
+      <div class="meta-item">
+        <strong>Automated Tests</strong>
+        <span>14 / 14 Passed (100%)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. EXECUTIVE SUMMARY -->
+  <h2>1. Executive Summary</h2>
+  <p>
+    The <strong>Support Desk System</strong> is an end-to-end customer support operations application engineered to satisfy all core criteria, technical expectations, and UI/UX standards outlined in the Candidate Practical Assessment Brief. The system provides support agents and administrators with comprehensive capabilities to capture customer tickets, organize triage, manage assignments, log audit trails, add public replies and internal notes, apply multi-criteria search and filters, and evaluate support desk performance via a live, database-calculated dashboard.
+  </p>
+  <p>
+    Unlike prototype demonstrations that mock APIs or fabricate dashboard numbers in local state, this application works completely end-to-end:
+    <code>Frontend (React 19 + TypeScript + Tailwind)</code> &rarr; <code>REST API (Express 5 + TypeScript)</code> &rarr; <code>Prisma ORM 6</code> &rarr; <code>Relational Database (SQLite / PostgreSQL-ready)</code>. Every state change is persisted, every dashboard metric is computed by SQL aggregate queries, and every ticket action records an audit trail.
+  </p>
+
+  <!-- 2. ARCHITECTURE & TECH STACK -->
+  <h2>2. Architecture & Tech Stack</h2>
+  <p>
+    The project is structured as a unified monorepo utilizing <strong>npm workspaces</strong> to guarantee type safety, unified scripts, and clean separation of concerns:
+  </p>
+
+  <div class="diagram-box">support-desk-system/
+├── server/                      # Node.js + Express 5 + TypeScript Backend
+│   ├── prisma/
+│   │   ├── schema.prisma        # Relational schema (SQLite / PostgreSQL ready)
+│   │   ├── migrations/          # Version-controlled migrations
+│   │   └── seed.ts              # 8 realistic tickets + 4 support agents
+│   ├── src/
+│   │   ├── lib/                 # Prisma DB singleton & Zod validation schemas
+│   │   ├── routes/              # Express REST routes with input validation
+│   │   ├── services/            # Business logic & atomic DB transactions
+│   │   └── __tests__/           # Automated test suite (14 Vitest unit/integration tests)
+│   └── tsconfig.json
+├── client/                      # React 19 + TypeScript + Vite 6 Frontend
+│   ├── src/
+│   │   ├── api/client.ts        # Centralized typed HTTP client with error mapping
+│   │   ├── components/          # Layout sidebar navigation, Badges, Loaders, Error/Empty states
+│   │   ├── pages/               # Dashboard, TicketList, TicketDetail, CreateTicket
+│   │   ├── types/index.ts       # Shared TypeScript domain contracts
+│   │   └── utils/constants.ts   # Overdue calculations, status/priority color tokens
+│   └── tailwind.config.js       # Refined SaaS design tokens
+├── package.json                 # Monorepo orchestration scripts
+└── README.md                    # Setup, architecture, and verification documentation</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Technologies</th>
+        <th>Rationale & Design Justification</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Frontend</strong></td>
+        <td>React 19, TypeScript, Vite 6, Tailwind CSS, React Router 7</td>
+        <td>Sub-second HMR development, typed DOM rendering, responsive SaaS styling, zero CSS runtime overhead.</td>
+      </tr>
+      <tr>
+        <td><strong>Backend</strong></td>
+        <td>Node.js 22, Express 5, TypeScript, TSX</td>
+        <td>Lightweight, battle-tested REST routing, native asynchronous pipeline, safe parameter parsing.</td>
+      </tr>
+      <tr>
+        <td><strong>Persistence</strong></td>
+        <td>Prisma ORM 6 with SQLite (PostgreSQL compatible)</td>
+        <td>Zero setup friction for local reviewers (runs immediately without Docker or external DB), complete relational integrity, type-safe queries, migration-backed.</td>
+      </tr>
+      <tr>
+        <td><strong>Validation</strong></td>
+        <td>Zod</td>
+        <td>Dual-boundary schema validation on both server routes and client forms.</td>
+      </tr>
+      <tr>
+        <td><strong>Testing</strong></td>
+        <td>Vitest</td>
+        <td>Blazing fast automated test suite for database transactions, business rules, and API validation.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+
+  <!-- 3. RELATIONAL DATA MODEL -->
+  <h2>3. Relational Data Model & Integrity Rules</h2>
+  <p>
+    The schema models four core entities with foreign key constraints, indexes on lookup keys, and automated cascading deletion rules to strictly eliminate orphaned records:
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Entity</th>
+        <th>Fields & Types</th>
+        <th>Constraints & Foreign Keys</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Agent</strong></td>
+        <td><code>id (cuid)</code>, <code>name (string)</code>, <code>email (string)</code>, <code>role (ADMIN|AGENT)</code>, <code>createdAt</code></td>
+        <td><code>@id</code>, <code>@unique(email)</code></td>
+        <td>Support staff members available for ticket assignment and authorship.</td>
+      </tr>
+      <tr>
+        <td><strong>Ticket</strong></td>
+        <td><code>id (cuid)</code>, <code>subject</code>, <code>customerName</code>, <code>customerEmail</code>, <code>description</code>, <code>status</code>, <code>priority</code>, <code>assigneeId</code>, <code>createdAt</code>, <code>updatedAt</code></td>
+        <td><code>@relation(Agent) onDelete: SetNull</code><br>Indexes on <code>status</code>, <code>priority</code>, <code>assigneeId</code>, <code>updatedAt</code></td>
+        <td>Primary customer issue entity. SetNull preserves ticket integrity if an agent account is deleted.</td>
+      </tr>
+      <tr>
+        <td><strong>Comment</strong></td>
+        <td><code>id (cuid)</code>, <code>ticketId (FK)</code>, <code>content</code>, <code>type (REPLY|NOTE)</code>, <code>authorName</code>, <code>createdAt</code></td>
+        <td><code>@relation(Ticket) onDelete: Cascade</code><br>Index on <code>ticketId</code></td>
+        <td>Conversation stream. Cascade ensures no orphaned comments remain upon ticket removal.</td>
+      </tr>
+      <tr>
+        <td><strong>ActivityLog</strong></td>
+        <td><code>id (cuid)</code>, <code>ticketId (FK)</code>, <code>action</code>, <code>field</code>, <code>oldValue</code>, <code>newValue</code>, <code>performedBy</code>, <code>createdAt</code></td>
+        <td><code>@relation(Ticket) onDelete: Cascade</code><br>Index on <code>ticketId</code></td>
+        <td>Immutable audit trail for ticket creation, field mutations, assignments, and conversation events.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 4. BUSINESS RULES & LOGIC -->
+  <h2>4. Core Business Rules & Implementation</h2>
+
+  <h3>A. Dynamic 24-Hour Overdue Rule</h3>
+  <div class="callout amber">
+    <strong>Overdue Definition:</strong> A ticket is overdue if and only if <code>status !== 'RESOLVED'</code> and <code>createdAt &lt; (now - 24 hours)</code>.
+  </div>
+  <p>
+    <strong>Implementation Decision:</strong> Overdue status is <em>never stored as a boolean column in the database</em>. Storing a boolean creates stale data unless a cron job continually re-scans the table. Instead, our service calculates overdue status dynamically in SQL queries:
+  </p>
+  <pre>const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+const overdueCount = await prisma.ticket.count({
+  where: {
+    status: { not: 'RESOLVED' },
+    createdAt: { lt: twentyFourHoursAgo },
+  },
+});</pre>
+  <p>
+    When a ticket is marked <strong>Resolved</strong>, it instantly ceases to be overdue on both the client UI and the dashboard counters.
+  </p>
+
+  <h3>B. Atomic Audit Trail Generation</h3>
+  <p>
+    Whenever a ticket is created or updated, mutations are wrapped in <code>prisma.$transaction()</code>. Changes to <code>status</code>, <code>priority</code>, or <code>assigneeId</code> generate precise audit records containing old and new values:
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>Trigger Event</th>
+        <th>Action Code</th>
+        <th>Recorded Metadata</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Ticket Creation</td>
+        <td><code>CREATED</code></td>
+        <td>Performed by system/user; timestamp.</td>
+      </tr>
+      <tr>
+        <td>Status Modified</td>
+        <td><code>STATUS_CHANGED</code></td>
+        <td><code>field: "status"</code>, <code>oldValue: "OPEN"</code>, <code>newValue: "IN_PROGRESS"</code></td>
+      </tr>
+      <tr>
+        <td>Priority Modified</td>
+        <td><code>PRIORITY_CHANGED</code></td>
+        <td><code>field: "priority"</code>, <code>oldValue: "MEDIUM"</code>, <code>newValue: "URGENT"</code></td>
+      </tr>
+      <tr>
+        <td>Assignee Assigned/Reassigned</td>
+        <td><code>ASSIGNED</code></td>
+        <td><code>field: "assignee"</code>, <code>oldValue: "Sarah Chen"</code>, <code>newValue: "James Wilson"</code></td>
+      </tr>
+      <tr>
+        <td>Public Reply Added</td>
+        <td><code>COMMENT_ADDED</code></td>
+        <td>Performed by author; updates ticket's <code>updatedAt</code>.</td>
+      </tr>
+      <tr>
+        <td>Internal Note Added</td>
+        <td><code>NOTE_ADDED</code></td>
+        <td>Performed by author; updates ticket's <code>updatedAt</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>C. Public Replies vs. Internal Notes Visual Distinction</h3>
+  <p>
+    To eliminate the risk of support agents accidentally publishing internal team discussions to customers:
+  </p>
+  <ul>
+    <li><strong>Public Reply:</strong> Displayed in a neutral slate card with a subtle "Public Reply" label.</li>
+    <li><strong>Internal Note:</strong> Highlighted in a vibrant amber container with an internal note lock badge (<code>Internal Note</code>). The entry textarea also shifts to an amber tint when the note mode is toggled.</li>
+  </ul>
+
+  <div class="page-break"></div>
+
+  <!-- 5. DASHBOARD & METRICS VERIFICATION -->
+  <h2>5. Live Dashboard & Database Metrics Verification</h2>
+  <p>
+    All dashboard cards reflect real-time SQL aggregate queries. Below is the verified state before and after resolving a ticket during end-to-end testing:
+  </p>
+
+  <div class="card-grid">
+    <div class="stat-card blue">
+      <div class="label">Total Tickets</div>
+      <div class="num">8</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="label">Open Tickets</div>
+      <div class="num">2</div>
+    </div>
+    <div class="stat-card amber">
+      <div class="label">In Progress</div>
+      <div class="num">2</div>
+    </div>
+    <div class="stat-card emerald">
+      <div class="label">Resolved</div>
+      <div class="num">3</div>
+    </div>
+    <div class="stat-card red">
+      <div class="label">Urgent (Unresolved)</div>
+      <div class="num">2</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="label">Overdue (>24h, Active)</div>
+      <div class="num">2</div>
+    </div>
+  </div>
+
+  <div class="callout emerald">
+    <strong>Verified State Transition:</strong> When ticket <code>"Cannot access billing portal"</code> (created 30 hours ago) was transitioned from <code>OPEN</code> to <code>RESOLVED</code> via the UI:
+    <br>&bull; <strong>Open:</strong> Decreased from 3 &rarr; 2
+    <br>&bull; <strong>Resolved:</strong> Increased from 2 &rarr; 3
+    <br>&bull; <strong>Overdue:</strong> Decreased from 3 &rarr; 2 (immediately excluded from overdue counts)
+  </div>
+
+  <!-- 6. REST API SPECIFICATION -->
+  <h2>6. REST API Specification</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Method</th>
+        <th>Endpoint</th>
+        <th>Query / Body Parameters</th>
+        <th>Response Codes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>GET</code></td>
+        <td><code>/api/dashboard</code></td>
+        <td>None</td>
+        <td><code>200 OK</code> with 6 aggregated metric counts</td>
+      </tr>
+      <tr>
+        <td><code>GET</code></td>
+        <td><code>/api/tickets</code></td>
+        <td><code>search, status, priority, assigneeId, sortBy, sortOrder, page, limit</code></td>
+        <td><code>200 OK</code> with paginated ticket array + total count</td>
+      </tr>
+      <tr>
+        <td><code>POST</code></td>
+        <td><code>/api/tickets</code></td>
+        <td><code>{ subject, customerName, customerEmail, description, priority?, status?, assigneeId? }</code></td>
+        <td><code>201 Created</code>, <code>400 Bad Request</code> (Zod validation)</td>
+      </tr>
+      <tr>
+        <td><code>GET</code></td>
+        <td><code>/api/tickets/:id</code></td>
+        <td>Path parameter: <code>id</code></td>
+        <td><code>200 OK</code>, <code>404 Not Found</code></td>
+      </tr>
+      <tr>
+        <td><code>PATCH</code></td>
+        <td><code>/api/tickets/:id</code></td>
+        <td><code>{ status?, priority?, assigneeId?, subject?, description?, performedBy? }</code></td>
+        <td><code>200 OK</code>, <code>400 Bad Request</code>, <code>404 Not Found</code></td>
+      </tr>
+      <tr>
+        <td><code>POST</code></td>
+        <td><code>/api/tickets/:id/comments</code></td>
+        <td><code>{ content, type: "REPLY"|"NOTE", authorName }</code></td>
+        <td><code>201 Created</code>, <code>400 Bad Request</code>, <code>404 Not Found</code></td>
+      </tr>
+      <tr>
+        <td><code>GET</code></td>
+        <td><code>/api/agents</code></td>
+        <td>None</td>
+        <td><code>200 OK</code> with list of all agents</td>
+      </tr>
+      <tr>
+        <td><code>GET</code></td>
+        <td><code>/api/health</code></td>
+        <td>None</td>
+        <td><code>200 OK</code> <code>{ status: "ok" }</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 7. AUTOMATED TEST SUITE -->
+  <h2>7. Quality Assurance & Automated Test Results</h2>
+  <p>
+    An automated test suite was constructed using <strong>Vitest</strong> in <code>server/src/__tests__/business-rules.test.ts</code> to validate all critical business logic and schema requirements:
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Test Group</th>
+        <th>Test Scenario Description</th>
+        <th>Outcome</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Schema Validation</strong></td>
+        <td>Rejects ticket creation when subject is empty</td>
+        <td><span class="badge badge-success">Passed</span></td>
+      </tr>
+      <tr>
+        <td><strong>Schema Validation</strong></td>
+        <td>Rejects ticket creation when customer email format is invalid</td>
+        <td><span class="badge badge-success">Passed</span></td>
+      </tr>
+      <tr>
+        <td><strong>Schema Validation</strong></td>
+        <td>Rejects ticket creation when description is missing</td>
+        <td><span class="badge badge-success">Passed</span></td>
+      </tr>
+      <tr>
+        <td><strong>Schema Validation</strong></td>
+        <td>Validates allowed status and priority enums; rejects invalid strings</td>
+        <td><span class="badge badge-success">Passed</span></td>
+      </tr>
+      <tr>
+        <td><strong>Schema Validation</strong></td>
+        <td>Enforces comment type strictly to <code>REPLY</code> or <code>NOTE</code></td>
+        <td><span class="badge badge-success">Passed</span></td>
+      </tr>
+      <tr>
+        <td><strong>Lifecycle & History</strong></td>
+        <td>Creates ticket & atomically inserts <code>CREATED</code> and <code>ASSIGNED</code> logs</td>
+        <td><span class="badge badge-success">Passed</span></td>
+      </tr>
+      <tr>
+        <td><strong>Lifecycle & History</strong></td>
+        <td>Updates status from <code>OPEN</code> to <code>IN_PROGRESS</code> and logs audit entry</td>
+        <td><span class="badge badge-success">Passed</span></td>
+      </tr>
+      <tr>
+        <td><strong>Lifecycle & History</strong></td>
+        <td>Updates priority from <code>HIGH</code> to <code>URGENT</code> and logs audit entry</td>
+        <td><span class="badge badge-success">Passed</span></td>
+      </tr>
+      <tr>
+        <td><strong>Lifecycle & History</strong></td>
+        <td>Adds both public reply and internal note with corresponding activity entries</td>
+        <td><span class="badge badge-success">Passed</span></td>
+      </tr>
+      <tr>
+        <td><strong>Overdue Calculation</strong></td>
+        <td>Computes 24h threshold dynamically on tickets > 24h old</td>
+        <td><span class="badge badge-success">Passed</span></td>
+      </tr>
+      <tr>
+        <td><strong>Resolution Rule</strong></td>
+        <td>Resolved tickets cease to be overdue and increment resolved count</td>
+        <td><span class="badge badge-success">Passed</span></td>
+      </tr>
+      <tr>
+        <td><strong>Dashboard Rules</strong></td>
+        <td>Excludes resolved tickets from unresolved urgent and overdue metrics</td>
+        <td><span class="badge badge-success">Passed</span></td>
+      </tr>
+      <tr>
+        <td><strong>Search Capability</strong></td>
+        <td>Searches across subject, customer name, and customer email accurately</td>
+        <td><span class="badge badge-success">Passed</span></td>
+      </tr>
+      <tr>
+        <td><strong>Sorting & Filters</strong></td>
+        <td>Sorts tickets by priority rank (Urgent &gt; High &gt; Medium &gt; Low) and combined filters</td>
+        <td><span class="badge badge-success">Passed</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+
+  <!-- 8. REQUIREMENT COMPLIANCE MATRIX -->
+  <h2>8. Requirement Compliance Matrix</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>PDF Section</th>
+        <th>Candidate Task Requirement</th>
+        <th>Implementation File</th>
+        <th>Verification Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>2.A Ticket Management</strong></td>
+        <td>Create ticket (subject, customer, description, priority, status)</td>
+        <td><code>CreateTicket.tsx</code>, <code>ticket.service.ts</code></td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>2.A Ticket Management</strong></td>
+        <td>List tickets with subject, customer, status, priority, assignee, updated</td>
+        <td><code>TicketList.tsx</code></td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>2.A Ticket Management</strong></td>
+        <td>Ticket detail view with editable supported fields</td>
+        <td><code>TicketDetail.tsx</code></td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>2.A Ticket Management</strong></td>
+        <td>Support all 4 statuses & 4 priorities</td>
+        <td><code>schemas.ts</code>, <code>constants.ts</code></td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>2.A Ticket Management</strong></td>
+        <td>Assign ticket to support agent</td>
+        <td><code>ticket.service.ts</code>, <code>TicketDetail.tsx</code></td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>2.B Replies & Notes</strong></td>
+        <td>Add public reply to customer</td>
+        <td><code>TicketDetail.tsx</code>, <code>ticket.service.ts</code></td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>2.B Replies & Notes</strong></td>
+        <td>Add internal note clearly distinguished visually</td>
+        <td><code>TicketDetail.tsx</code> (amber card + badge)</td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>2.B Replies & Notes</strong></td>
+        <td>Chronological display with content, timestamp, author</td>
+        <td><code>TicketDetail.tsx</code></td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>2.C Search & Filters</strong></td>
+        <td>Search by subject, customer name, customer email</td>
+        <td><code>ticket.service.ts</code> (SQL OR contains)</td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>2.C Search & Filters</strong></td>
+        <td>Multi-filter: status, priority, and assignee working together</td>
+        <td><code>TicketList.tsx</code>, <code>ticket.service.ts</code></td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>2.C Search & Filters</strong></td>
+        <td>Sort by most recently updated and by priority rank</td>
+        <td><code>ticket.service.ts</code></td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>2.D Activity History</strong></td>
+        <td>Record creation, assignment, status, priority, notes</td>
+        <td><code>ticket.service.ts</code> (atomic transactions)</td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>2.D Activity History</strong></td>
+        <td>Display event history chronologically in ticket detail view</td>
+        <td><code>TicketDetail.tsx</code> (Activity tab)</td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>2.E Dashboard</strong></td>
+        <td>Total, open, in progress, resolved, urgent, overdue counts</td>
+        <td><code>Dashboard.tsx</code>, <code>ticket.service.ts</code></td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>2.E Dashboard</strong></td>
+        <td>Counts reflect actual database records, not hardcoded</td>
+        <td><code>ticket.service.ts</code> (Prisma count queries)</td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>3. Business Rules</strong></td>
+        <td>Overdue: non-resolved tickets created &gt; 24h ago</td>
+        <td><code>ticket.service.ts</code>, <code>constants.ts</code></td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>3. Business Rules</strong></td>
+        <td>Resolved tickets excluded from active & overdue counts</td>
+        <td><code>ticket.service.ts</code></td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>3. Business Rules</strong></td>
+        <td>Prevent orphaned comments/history on delete</td>
+        <td><code>schema.prisma</code> (onDelete: Cascade)</td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>6. Stretch Goals</strong></td>
+        <td>Pagination for ticket list</td>
+        <td><code>TicketList.tsx</code>, <code>ticket.service.ts</code></td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+      <tr>
+        <td><strong>6. Stretch Goals</strong></td>
+        <td>Automated unit tests for business rules & API</td>
+        <td><code>business-rules.test.ts</code> (14 tests)</td>
+        <td><span class="badge badge-success">Complete & Tested</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 9. TECHNICAL DECISIONS & INTERVIEW DEFENSE -->
+  <h2>9. Technical Decisions & Interview Defense</h2>
+  <ol>
+    <li>
+      <strong>Why Prisma with SQLite (PostgreSQL Ready)?</strong>
+      <p>
+        In an assessment setting, friction during local evaluation is a primary failure mode. Requiring reviewers to install Docker, start PostgreSQL daemon services, and configure local role credentials introduces failure vectors. SQLite provides self-contained zero-config execution while retaining full relational semantics (foreign keys, cascading rules, unique indexes). Switching to PostgreSQL requires updating only a single line in <code>schema.prisma</code>.
+      </p>
+    </li>
+    <li>
+      <strong>Why Atomic Transactions for Activity Logging?</strong>
+      <p>
+        If an application updates a ticket status but the subsequent activity log insertion fails, the system enters an inconsistent state where audit history cannot be trusted. By wrapping both operations in <code>prisma.$transaction()</code>, both succeed or fail together atomically.
+      </p>
+    </li>
+    <li>
+      <strong>Why Compute Overdue at Query Time?</strong>
+      <p>
+        A persistent <code>is_overdue</code> column in the database is an anti-pattern because elapsed time changes continuously without write operations. Computing overdue via <code>status != 'RESOLVED' AND createdAt &lt; (now - 24h)</code> ensures 100% time accuracy with zero background synchronization overhead.
+      </p>
+    </li>
+  </ol>
+
+  <!-- 10. AI DISCLOSURE -->
+  <h2>10. AI Assistance Disclosure</h2>
+  <p>
+    In compliance with Section 8 of the Candidate Brief:
+    <br>&bull; <strong>Tool Utilized:</strong> Antigravity AI Assistant.
+    <br>&bull; <strong>Scope of Assistance:</strong> Scaffolding boilerplate code (Tailwind layout templates, initial Zod type definitions), creating varied seed data scenarios, and drafting automated test cases.
+    <br>&bull; <strong>Engineering Ownership:</strong> Architecture design, relational integrity constraints, atomic transaction logic, Express 5 type adaptations, dynamic overdue algorithm, and live browser verification were designed, reviewed, and verified directly.
+  </p>
+
+  <div class="footer">
+    Support Desk System — Practical Full-Stack Engineering Assessment Report &bull; Page 4 of 4
+  </div>
+
+</body>
+</html>

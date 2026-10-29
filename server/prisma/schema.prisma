@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Agent {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  role      String   @default("AGENT") // ADMIN or AGENT
+  createdAt DateTime @default(now()) @map("created_at")
+
+  tickets Ticket[]
+
+  @@map("agents")
+}
+
+model Ticket {
+  id            String   @id @default(cuid())
+  subject       String
+  customerName  String   @map("customer_name")
+  customerEmail String   @map("customer_email")
+  description   String
+  status        String   @default("OPEN") // OPEN, IN_PROGRESS, WAITING_ON_CUSTOMER, RESOLVED
+  priority      String   @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  assigneeId    String?  @map("assignee_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  assignee   Agent?        @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
+  comments   Comment[]
+  activities ActivityLog[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([assigneeId])
+  @@index([updatedAt])
+  @@map("tickets")
+}
+
+model Comment {
+  id         String   @id @default(cuid())
+  ticketId   String   @map("ticket_id")
+  content    String
+  type       String   // REPLY or NOTE
+  authorName String   @map("author_name")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+  @@map("comments")
+}
+
+model ActivityLog {
+  id          String   @id @default(cuid())
+  ticketId    String   @map("ticket_id")
+  action      String   // CREATED, STATUS_CHANGED, PRIORITY_CHANGED, ASSIGNED, COMMENT_ADDED, NOTE_ADDED
+  field       String?  // Which field changed (status, priority, assignee)
+  oldValue    String?  @map("old_value")
+  newValue    String?  @map("new_value")
+  performedBy String   @map("performed_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+  @@map("activity_logs")
+}
